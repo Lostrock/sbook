@@ -134,36 +134,42 @@ if(isset($_POST['message']) && !empty($_POST['message']))
     header("Location: ./index.php?chemin=actualite");
 }
 
-
 if(!empty($_FILES))
 {
-  
    $img=$_FILES['file'];
+  
    $nomImg=$img['name'];
 
-  
-if(($nomImg)!="")
+ $ListeExtension = array('jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif');
+ 
+$ExtensionPresumee = explode('.', $nomImg);
+$ExtensionPresumeeT = strtolower($ExtensionPresumee[count($ExtensionPresumee)-1]);
+
+if ($ExtensionPresumeeT == 'jpg' || $ExtensionPresumeeT == 'jpeg'|| $ExtensionPresumeeT =='png'|| $ExtensionPresumeeT =='gif' )
 {
-    
-    $structure = './ressources/images/test';
-    mkdir($structure);
-   $link="<img height='230' width='230' src='./ressources/images/$nomImg'>";
+             
+    if(($nomImg)!="")
+    {
 
-  
-    $bdd = new PDO('mysql:host=localhost;dbname=book','root', '');
-    $query = $bdd->prepare("insert into element(contenu,id_utilisateur,date)
-                    values(:mess,:id,CURRENT_TIMESTAMP) ");
+        $structure = "./ressources/images/$id";
+        mkdir($structure);
 
-    $query->bindValue('mess', $link, PDO::PARAM_STR);
-    $query->bindValue('id', $id, PDO::PARAM_STR);
-    $query->execute();
-}
-   if(move_uploaded_file($img['tmp_name'],"./ressources/images/".$img['name']))
-   {
+       $link="<img height='230' width='230' src='$structure/$nomImg'>";
 
-         header("Location: ./index.php?chemin=actualite");
-   }
-   else
-      echo "erreur: image non importée";
-   
+        $query = $bdd->prepare("insert into element(contenu,id_utilisateur,date)
+                        values(:mess,:id,CURRENT_TIMESTAMP) ");
+
+        $query->bindValue('mess', $link, PDO::PARAM_STR);
+        $query->bindValue('id', $id, PDO::PARAM_STR);
+        $query->execute();
+    }
+       if(move_uploaded_file($img['tmp_name'],"$structure/".$img['name']))
+       {
+             header("Location: ./index.php?chemin=actualite");
+       }
+    else
+                echo "erreur: image non importée";
+        }
+
+
 }
