@@ -147,7 +147,7 @@ if(($nomImg)!="")
     
     $structure = './ressources/images/test';
     mkdir($structure);
-   $link="<img src='./ressources/images/$nomImg'>";
+   $link="<img height='230' width='230' src='./ressources/images/$nomImg'>";
 
   
     $bdd = new PDO('mysql:host=localhost;dbname=book','root', '');
